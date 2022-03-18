@@ -1,4 +1,4 @@
-package de.craftsarmy.client.gui;
+package de.craftsarmy.client.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.craftsarmy.client.Client;

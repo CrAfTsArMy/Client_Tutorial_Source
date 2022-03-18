@@ -2,8 +2,9 @@ package de.craftsarmy.client;
 
 import com.mojang.realmsclient.RealmsMainScreen;
 import de.craftsarmy.Variables;
-import de.craftsarmy.client.gui.OverlayManager;
-import de.craftsarmy.client.gui.WelcomeScreen;
+import de.craftsarmy.client.gui.overlays.FPSOverlay;
+import de.craftsarmy.client.gui.overlays.OverlayManager;
+import de.craftsarmy.client.gui.screens.WelcomeScreen;
 import de.craftsarmy.discord.RPC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
@@ -28,7 +29,10 @@ public class Client {
     }
 
     public static void tick() {
-
+        if(minecraft.level != null)
+            overlayManager.showOverlay(FPSOverlay.class);
+        else
+            overlayManager.hideOverlay(FPSOverlay.class);
     }
 
     public static void resetRpc() {
@@ -59,7 +63,8 @@ public class Client {
         }
     }
 
-    public static boolean hasBeenInitialized() {
+    public static boolean isInitialized() {
         return initialized;
     }
+
 }
