@@ -30,7 +30,7 @@ configurations {
 }
 
 group = 'de.craftsarmy'
-version = 'Alpha-1.2.5'
+version = 'Alpha-1.2.6'
 
 ext {
     minecraft_version = '1.18.1'
@@ -49,6 +49,9 @@ dependencies {
     implementation 'net.minecraftforge:forgespi:' + spi_version
     implementation 'club.minnced:java-discord-rpc:2.0.2'
     shade 'club.minnced:java-discord-rpc:2.0.2'
+    implementation 'com.squareup.okhttp:okhttp:2.7.5'
+    shade 'com.squareup.okhttp:okhttp:2.7.5'
+
 //    Use the shade to add the lib to the jar
 //    or use compile if you want to load the lib from the version.json
 //    from a maven repo

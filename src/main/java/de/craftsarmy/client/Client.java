@@ -6,6 +6,7 @@ import de.craftsarmy.client.cosmetics.CosmeticsManager;
 import de.craftsarmy.client.gui.overlays.FPSOverlay;
 import de.craftsarmy.client.gui.overlays.OverlayManager;
 import de.craftsarmy.client.gui.screens.WelcomeScreen;
+import de.craftsarmy.client.network.NetworkManager;
 import de.craftsarmy.discord.RPC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
@@ -20,12 +21,14 @@ public class Client {
     public static Minecraft minecraft;
     public static OverlayManager overlayManager;
     public static CosmeticsManager cosmeticsManager;
+    public static NetworkManager networkManager;
 
     public static String websiteUrl = "https://web1.craftsblock.de";
 
     public static void init(Minecraft minecraft) {
         Client.minecraft = minecraft;
         overlayManager = new OverlayManager().init();
+        networkManager = new NetworkManager().init();
         cosmeticsManager = new CosmeticsManager().init();
         minecraft.setScreen(new WelcomeScreen());
         initialized = true;
@@ -33,7 +36,7 @@ public class Client {
 
     public static void tick() {
         if (minecraft.level != null) {
-            cosmeticsManager.getCapeManager().tick();
+            cosmeticsManager.tick();
             overlayManager.showOverlay(FPSOverlay.class);
         } else {
             overlayManager.hideOverlay(FPSOverlay.class);
