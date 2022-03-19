@@ -2,6 +2,7 @@ package de.craftsarmy.client;
 
 import com.mojang.realmsclient.RealmsMainScreen;
 import de.craftsarmy.Variables;
+import de.craftsarmy.client.cosmetics.CosmeticsManager;
 import de.craftsarmy.client.gui.overlays.FPSOverlay;
 import de.craftsarmy.client.gui.overlays.OverlayManager;
 import de.craftsarmy.client.gui.screens.WelcomeScreen;
@@ -18,21 +19,25 @@ public class Client {
 
     public static Minecraft minecraft;
     public static OverlayManager overlayManager;
+    public static CosmeticsManager cosmeticsManager;
 
     public static String websiteUrl = "https://web1.craftsblock.de";
 
     public static void init(Minecraft minecraft) {
         Client.minecraft = minecraft;
-        overlayManager = new OverlayManager();
+        overlayManager = new OverlayManager().init();
+        cosmeticsManager = new CosmeticsManager().init();
         minecraft.setScreen(new WelcomeScreen());
         initialized = true;
     }
 
     public static void tick() {
-        if(minecraft.level != null)
+        if (minecraft.level != null) {
+            cosmeticsManager.getCapeManager().tick();
             overlayManager.showOverlay(FPSOverlay.class);
-        else
+        } else {
             overlayManager.hideOverlay(FPSOverlay.class);
+        }
     }
 
     public static void resetRpc() {
@@ -45,20 +50,22 @@ public class Client {
     }
 
     public static void disconnect(boolean titlescreen) {
-        boolean flag = minecraft.isLocalServer();
-        minecraft.level.disconnect();
-        if (flag)
-            minecraft.clearLevel(new GenericDirtMessageScreen(new TranslatableComponent("menu.savingLevel")));
-        else
-            minecraft.clearLevel();
-        if (titlescreen) {
-            TitleScreen ts = new TitleScreen();
-            if (flag) {
-                minecraft.setScreen(ts);
-            } else if (minecraft.isConnectedToRealms()) {
-                minecraft.setScreen(new RealmsMainScreen(ts));
-            } else {
-                minecraft.setScreen(new JoinMultiplayerScreen(ts));
+        if (minecraft.level != null) {
+            boolean flag = minecraft.isLocalServer();
+            minecraft.level.disconnect();
+            if (flag)
+                minecraft.clearLevel(new GenericDirtMessageScreen(new TranslatableComponent("menu.savingLevel")));
+            else
+                minecraft.clearLevel();
+            if (titlescreen) {
+                TitleScreen ts = new TitleScreen();
+                if (flag) {
+                    minecraft.setScreen(ts);
+                } else if (minecraft.isConnectedToRealms()) {
+                    minecraft.setScreen(new RealmsMainScreen(ts));
+                } else {
+                    minecraft.setScreen(new JoinMultiplayerScreen(ts));
+                }
             }
         }
     }
