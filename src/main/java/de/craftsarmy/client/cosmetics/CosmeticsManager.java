@@ -17,10 +17,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class CosmeticsManager {
 
-    private ConcurrentLinkedQueue<NetworkPlayer> players = new ConcurrentLinkedQueue<>();
-
     private CapeManager capeManager;
 
+    private ConcurrentLinkedQueue<NetworkPlayer> players = new ConcurrentLinkedQueue<>();
     private long last = System.currentTimeMillis();
 
     public CosmeticsManager init() {

@@ -1,6 +1,8 @@
 package de.craftsarmy.client.cosmetics.capes;
 
 import de.craftsarmy.client.Client;
+import de.craftsarmy.client.cosmetics.capes.statically.DiamondCape;
+import de.craftsarmy.client.cosmetics.capes.statically.ResetCape;
 import de.craftsarmy.client.utils.Touch;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.SimpleTexture;
