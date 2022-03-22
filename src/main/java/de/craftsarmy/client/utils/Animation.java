@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class Animation<E> {
+public class Animation<E extends AbstractAnimatedTexture> {
 
     private final String base;
     private final Touch<E> touch;
@@ -17,7 +17,7 @@ public class Animation<E> {
     private final List<AnimationTile<E>> tiles = new ArrayList<>();
     private int current = 0;
 
-    public Animation(Class<E> clazz, String base, String prefix) {
+    public Animation(Class<? extends E> clazz, String base, String prefix) {
         touch = new Touch<>();
         this.base = base;
         new Thread(() -> {
@@ -74,20 +74,20 @@ public class Animation<E> {
         return get(temp);
     }
 
-    public static class AnimationTile<E> {
+    public static class AnimationTile<K extends AbstractAnimatedTexture> {
 
-        private final E data;
+        private final K data;
 
-        public AnimationTile(E e, ResourceLocation location) {
-            if (e instanceof AbstractAnimatedCape) {
+        public AnimationTile(K e, ResourceLocation location) {
+            if (e != null) {
                 data = e;
-                ((AbstractAnimatedTexture) e).update(location);
+                e.update(location);
                 return;
             }
             data = null;
         }
 
-        public E getData() {
+        public K getData() {
             return data;
         }
 

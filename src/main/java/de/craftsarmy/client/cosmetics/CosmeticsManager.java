@@ -4,8 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
+import com.squareup.okhttp.ResponseBody;
 import de.craftsarmy.client.Client;
 import de.craftsarmy.client.cosmetics.capes.CapeManager;
+import de.craftsarmy.client.gui.overlays.ServerOfflineOverlay;
 import de.craftsarmy.client.network.NetworkPlayer;
 
 import java.io.IOException;
@@ -29,7 +31,7 @@ public class CosmeticsManager {
 
     public void tick() {
         capeManager.tick();
-        if (last < System.currentTimeMillis()) {
+        /*if (last < System.currentTimeMillis()) {
             new Thread(() -> {
                 try {
                     players = getPlayersOnClient();
@@ -39,7 +41,7 @@ public class CosmeticsManager {
                 Thread.currentThread().interrupt();
             }).start();
             last = System.currentTimeMillis() + (1000 * 10);
-        }
+        }*/
     }
 
     public CapeManager getCapeManager() {
@@ -48,40 +50,36 @@ public class CosmeticsManager {
 
     public ConcurrentLinkedQueue<NetworkPlayer> getPlayersOnClient() throws IOException {
         assert Client.minecraft.player != null;
-        Collection<UUID> players = Client.minecraft.player.connection.getOnlinePlayerIds();
-        StringWriter request = new StringWriter();
-        JsonWriter writer = new JsonWriter(request);
-        writer.beginObject().name("data").beginArray();
-        for (UUID uuid : players)
-            try {
-                if (Objects.requireNonNull(Client.minecraft.player.connection.getPlayerInfo(uuid)).isOnClient())
-                    writer.value(Objects.requireNonNull(Client.minecraft.player.connection.getPlayerInfo(uuid)).getProfile().getName());
-            } catch (Exception ignored) {
-            }
-        writer.endArray().endObject().flush();
-        String response = Client.networkManager.send(Client.networkManager.patch("/data", request.toString())).string();
-        System.out.println("[Cosmetics Sync Response]: " + response);
-        JsonObject object = JsonParser.parseString(response).getAsJsonObject();
-        ConcurrentLinkedQueue<NetworkPlayer> networkPlayers = new ConcurrentLinkedQueue<>();
-        for (JsonElement element : object.getAsJsonArray("data")) {
-            if (element.isJsonObject()) {
-                JsonObject data = element.getAsJsonObject();
-                String name = data.get("name").getAsString();
-                String message = data.get("message").getAsString();
-                if (message.trim().equalsIgnoreCase("user.not.exists")) {
-                    networkPlayers.add(new NetworkPlayer(Client.minecraft.player.connection.getPlayerInfo(name), null, false));
-                } else {
-                    ConcurrentLinkedQueue<String> cosmetics = new ConcurrentLinkedQueue<>();
-                    for (JsonElement c : data.getAsJsonArray("data"))
-                        cosmetics.add(c.getAsString());
-                    networkPlayers.add(new NetworkPlayer(Client.minecraft.player.connection.getPlayerInfo(name), cosmetics, true));
+        assert !Client.minecraft.isLocalServer();
+        ResponseBody body = Client.networkManager.send(Client.networkManager.patch("/data", "{}"));
+        if (body != null) {
+            String response = body.string();
+            System.out.println("[Cosmetics Sync Response]: " + response);
+            JsonObject object = JsonParser.parseString(response).getAsJsonObject();
+            ConcurrentLinkedQueue<NetworkPlayer> networkPlayers = new ConcurrentLinkedQueue<>();
+            for (JsonElement element : object.getAsJsonArray("data")) {
+                try {
+                    if (element.isJsonObject()) {
+                        JsonObject data = element.getAsJsonObject();
+                        String name = data.get("name").getAsString();
+                        ConcurrentLinkedQueue<String> cosmetics = new ConcurrentLinkedQueue<>();
+                        for (JsonElement c : data.getAsJsonArray("data"))
+                            cosmetics.add(c.getAsString());
+                        networkPlayers.add(new NetworkPlayer(Client.minecraft.player.connection.getPlayerInfo(name), cosmetics, true));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
+            return networkPlayers;
+        } else {
+            Client.overlayManager.showOverlay(ServerOfflineOverlay.class);
         }
-        return networkPlayers;
+        return new ConcurrentLinkedQueue<>();
     }
 
     public ConcurrentLinkedQueue<NetworkPlayer> getPlayers() {
         return players;
     }
+
 }

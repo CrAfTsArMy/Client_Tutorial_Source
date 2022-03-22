@@ -23,7 +23,8 @@ public class CapeManager {
     public void setCape(Class<?> clazz) {
         try {
             cape = touch.touch(clazz);
-            Client.networkManager.send(Client.networkManager.put("/data", "{\"data\":[\"cape:" + cape.getCape().getPath() + "\"]}"));
+            if (Client.networkManager.isLoggedin())
+                Client.networkManager.send(Client.networkManager.put("/data", "{\"data\":[\"cape:" + cape.getCape().getPath() + "\"]}"));
         } catch (Exception e) {
             e.printStackTrace();
         }
