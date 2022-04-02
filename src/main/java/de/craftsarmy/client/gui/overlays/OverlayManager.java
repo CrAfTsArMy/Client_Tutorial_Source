@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OverlayManager {
 
-    private final ConcurrentHashMap<Class<?>, IOverlay> overlays = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class<? extends IOverlay>, IOverlay> overlays = new ConcurrentHashMap<>();
     private Touch<IOverlay> touch;
 
     public OverlayManager init() {
@@ -17,7 +17,7 @@ public class OverlayManager {
         return this;
     }
 
-    public void showOverlay(Class<?> clazz) {
+    public void showOverlay(Class<? extends IOverlay> clazz) {
         try {
             overlays.put(clazz, Objects.requireNonNull(touch.touch(clazz)));
         } catch (Exception e) {
@@ -25,7 +25,7 @@ public class OverlayManager {
         }
     }
 
-    public void hideOverlay(Class<?> clazz) {
+    public void hideOverlay(Class<? extends IOverlay> clazz) {
         overlays.remove(clazz);
     }
 

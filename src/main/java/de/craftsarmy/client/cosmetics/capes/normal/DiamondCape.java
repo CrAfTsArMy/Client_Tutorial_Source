@@ -1,4 +1,4 @@
-package de.craftsarmy.client.cosmetics.capes.statically;
+package de.craftsarmy.client.cosmetics.capes.normal;
 
 import de.craftsarmy.client.cosmetics.capes.ICape;
 import net.minecraft.resources.ResourceLocation;

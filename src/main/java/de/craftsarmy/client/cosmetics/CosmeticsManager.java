@@ -1,27 +1,14 @@
 package de.craftsarmy.client.cosmetics;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonWriter;
-import com.squareup.okhttp.ResponseBody;
 import de.craftsarmy.client.Client;
-import de.craftsarmy.client.cosmetics.capes.CapeManager;
-import de.craftsarmy.client.gui.overlays.ServerOfflineOverlay;
-import de.craftsarmy.client.network.NetworkPlayer;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import de.craftsarmy.client.cosmetics.capes.normal.CapeManager;
+import de.craftsarmy.client.utils.Worker;
 
 public class CosmeticsManager {
 
     private CapeManager capeManager;
 
-    private ConcurrentLinkedQueue<NetworkPlayer> players = new ConcurrentLinkedQueue<>();
+    //private ConcurrentLinkedQueue<NetworkPlayer> players = new ConcurrentLinkedQueue<>();
     private long last = System.currentTimeMillis();
 
     public CosmeticsManager init() {
@@ -31,24 +18,30 @@ public class CosmeticsManager {
 
     public void tick() {
         capeManager.tick();
-        /*if (last < System.currentTimeMillis()) {
-            new Thread(() -> {
-                try {
-                    players = getPlayersOnClient();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Thread.currentThread().interrupt();
-            }).start();
+        if (last < System.currentTimeMillis()) {
+            Client.worker.submit(NetworkTask.class);
             last = System.currentTimeMillis() + (1000 * 10);
-        }*/
+        }
+    }
+
+    private static final class NetworkTask implements Worker.Task {
+
+        @Override
+        public void run() {
+            /*try {
+                players = getPlayersOnClient();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+        }
+
     }
 
     public CapeManager getCapeManager() {
         return capeManager;
     }
 
-    public ConcurrentLinkedQueue<NetworkPlayer> getPlayersOnClient() throws IOException {
+    /*public ConcurrentLinkedQueue<NetworkPlayer> getPlayersOnClient() throws IOException {
         assert Client.minecraft.player != null;
         assert !Client.minecraft.isLocalServer();
         ResponseBody body = Client.networkManager.send(Client.networkManager.patch("/data", "{}"));
@@ -80,6 +73,6 @@ public class CosmeticsManager {
 
     public ConcurrentLinkedQueue<NetworkPlayer> getPlayers() {
         return players;
-    }
+    }*/
 
 }

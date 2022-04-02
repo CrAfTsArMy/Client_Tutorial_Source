@@ -1,6 +1,7 @@
 package de.craftsarmy.client.gui.overlays;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.craftsarmy.client.Client;
 import net.minecraft.client.gui.Font;
 import net.optifine.Config;
 

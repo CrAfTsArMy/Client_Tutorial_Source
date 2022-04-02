@@ -1,9 +1,8 @@
 package de.craftsarmy.client.utils;
 
-import de.craftsarmy.client.cosmetics.capes.animated.AbstractAnimatedCape;
+import de.craftsarmy.client.Client;
 import net.minecraft.resources.ResourceLocation;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -11,34 +10,43 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Animation<E extends AbstractAnimatedTexture> {
 
     private final String base;
+    private final String prefix;
     private final Touch<E> touch;
 
     private boolean ready = false;
     private final List<AnimationTile<E>> tiles = new ArrayList<>();
     private int current = 0;
 
+    private final Class<? extends E> clazz;
+
     public Animation(Class<? extends E> clazz, String base, String prefix) {
         touch = new Touch<>();
         this.base = base;
-        new Thread(() -> {
+        this.prefix = prefix;
+        this.clazz = clazz;
+        Client.worker.submit(StartupTask.class);
+    }
+
+    private final class StartupTask implements Worker.Task {
+
+        @Override
+        public void run() {
             ConcurrentLinkedQueue<ResourceLocation> locations = new ConcurrentLinkedQueue<>();
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 100; i++)
                 try {
-                    ResourceLocation location = new ResourceLocation((base.trim().toLowerCase().endsWith("/") ? base.trim().toLowerCase() : base.trim().toLowerCase() + "/") + prefix + "_" + i);
+                    ResourceLocation location = new ResourceLocation((base.trim().toLowerCase().endsWith("/") ? base.trim().toLowerCase() : base.trim().toLowerCase() + "/") + prefix + "_" + i + ".png");
                     locations.add(location);
                 } catch (Exception ignored) {
                 }
-            }
-            for (ResourceLocation location : locations) {
+            for (ResourceLocation location : locations)
                 try {
                     tiles.add(new AnimationTile<>(touch.touch(clazz), location));
-                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
             ready = true;
-            Thread.currentThread().interrupt();
-        });
+        }
+
     }
 
     public String getBase() {
@@ -78,10 +86,10 @@ public class Animation<E extends AbstractAnimatedTexture> {
 
         private final K data;
 
-        public AnimationTile(K e, ResourceLocation location) {
-            if (e != null) {
-                data = e;
-                e.update(location);
+        public AnimationTile(K k, ResourceLocation location) {
+            if (k != null) {
+                data = k;
+                data.update(location);
                 return;
             }
             data = null;

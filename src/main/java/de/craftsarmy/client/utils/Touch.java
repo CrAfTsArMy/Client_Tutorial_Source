@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Touch<E> {
 
-    public E touch(Class<?> clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public E touch(Class<? extends E> clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return (E) clazz.getDeclaredConstructor().newInstance();
     }
 

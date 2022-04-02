@@ -1,8 +1,8 @@
-package de.craftsarmy.client.cosmetics.capes;
+package de.craftsarmy.client.cosmetics.capes.normal;
 
 import de.craftsarmy.client.Client;
-import de.craftsarmy.client.cosmetics.capes.statically.DiamondCape;
-import de.craftsarmy.client.cosmetics.capes.statically.ResetCape;
+import de.craftsarmy.client.cosmetics.capes.ICape;
+import de.craftsarmy.client.cosmetics.capes.ResetCape;
 import de.craftsarmy.client.utils.Touch;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.SimpleTexture;
@@ -20,11 +20,11 @@ public class CapeManager {
         return this;
     }
 
-    public void setCape(Class<?> clazz) {
+    public void setCape(Class<? extends ICape> clazz) {
         try {
             cape = touch.touch(clazz);
-            if (Client.networkManager.isLoggedin())
-                Client.networkManager.send(Client.networkManager.put("/data", "{\"data\":[\"cape:" + cape.getCape().getPath() + "\"]}"));
+            /*if (Client.networkManager.isLoggedin())
+                Client.networkManager.send(Client.networkManager.put("/data", "{\"data\":[\"cape:" + cape.getCape().getPath() + "\"]}"));*/
         } catch (Exception e) {
             e.printStackTrace();
         }

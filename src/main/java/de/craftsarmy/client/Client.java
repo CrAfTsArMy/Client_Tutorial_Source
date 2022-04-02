@@ -3,14 +3,12 @@ package de.craftsarmy.client;
 import com.mojang.realmsclient.RealmsMainScreen;
 import de.craftsarmy.Variables;
 import de.craftsarmy.client.cosmetics.CosmeticsManager;
-import de.craftsarmy.client.cosmetics.capes.ICape;
-import de.craftsarmy.client.cosmetics.capes.animated.AbstractAnimatedCape;
-import de.craftsarmy.client.cosmetics.capes.animated.AnimatedCape;
-import de.craftsarmy.client.gui.overlays.*;
+import de.craftsarmy.client.gui.overlays.FPSOverlay;
+import de.craftsarmy.client.gui.overlays.OverlayManager;
+import de.craftsarmy.client.gui.overlays.ServerBackOnlineOverlay;
+import de.craftsarmy.client.gui.overlays.ServerOfflineOverlay;
 import de.craftsarmy.client.gui.screens.WelcomeScreen;
-import de.craftsarmy.client.network.NetworkManager;
-import de.craftsarmy.client.utils.AbstractAnimatedTexture;
-import de.craftsarmy.client.utils.Animation;
+import de.craftsarmy.client.utils.Worker;
 import de.craftsarmy.discord.RPC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
@@ -24,17 +22,17 @@ public class Client {
     private static boolean initialized = false;
 
     public static Minecraft minecraft;
+    public static Worker worker;
     public static OverlayManager overlayManager;
     public static CosmeticsManager cosmeticsManager;
-    public static NetworkManager networkManager;
 
     public static String websiteUrl = "https://web1.craftsblock.de";
     public static ServerAddress serverAddress = null;
 
     public static void init(Minecraft minecraft) {
         Client.minecraft = minecraft;
+        worker = new Worker();
         overlayManager = new OverlayManager().init();
-        networkManager = new NetworkManager().init();
         cosmeticsManager = new CosmeticsManager().init();
         minecraft.setScreen(new WelcomeScreen());
         initialized = true;
@@ -48,7 +46,6 @@ public class Client {
             overlayManager.hideOverlay(FPSOverlay.class);
             overlayManager.hideOverlay(ServerOfflineOverlay.class);
             overlayManager.hideOverlay(ServerBackOnlineOverlay.class);
-            overlayManager.hideOverlay(OnlyOnMultiplayerServersOverlay.class);
         }
     }
 
@@ -62,7 +59,6 @@ public class Client {
     }
 
     public static void disconnect(boolean titlescreen) {
-        networkManager.logout();
         if (minecraft.level != null) {
             boolean flag = minecraft.isLocalServer();
             minecraft.level.disconnect();
