@@ -1,8 +1,8 @@
 package de.craftsarmy.client.cosmetics;
 
 import de.craftsarmy.client.Client;
-import de.craftsarmy.client.cosmetics.capes.normal.CapeManager;
-import de.craftsarmy.client.utils.Worker;
+import de.craftsarmy.client.cosmetics.capes.CapeManager;
+import de.craftsarmy.craftscore.api.threading.AbstractWorker;
 
 public class CosmeticsManager {
 
@@ -24,7 +24,11 @@ public class CosmeticsManager {
         }
     }
 
-    private static final class NetworkTask implements Worker.Task {
+    public static final class NetworkTask extends AbstractWorker.Task {
+
+        public NetworkTask(Class<?> from) {
+            super(from);
+        }
 
         @Override
         public void run() {

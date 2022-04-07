@@ -2,22 +2,22 @@ package de.craftsarmy.client.gui.overlays;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.craftsarmy.client.Client;
-import de.craftsarmy.client.utils.Touch;
+import de.craftsarmy.craftscore.utils.Touch;
 
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class OverlayManager {
 
-    private final ConcurrentHashMap<Class<? extends IOverlay>, IOverlay> overlays = new ConcurrentHashMap<>();
-    private Touch<IOverlay> touch;
+    private final ConcurrentHashMap<Class<? extends AbstractOverlay>, AbstractOverlay> overlays = new ConcurrentHashMap<>();
+    private Touch<AbstractOverlay> touch;
 
     public OverlayManager init() {
-        touch = new Touch<>();
+        touch = new Touch<>(this.getClass());
         return this;
     }
 
-    public void showOverlay(Class<? extends IOverlay> clazz) {
+    public void showOverlay(Class<? extends AbstractOverlay> clazz) {
         try {
             overlays.put(clazz, Objects.requireNonNull(touch.touch(clazz)));
         } catch (Exception e) {
@@ -25,7 +25,7 @@ public class OverlayManager {
         }
     }
 
-    public void hideOverlay(Class<? extends IOverlay> clazz) {
+    public void hideOverlay(Class<? extends AbstractOverlay> clazz) {
         overlays.remove(clazz);
     }
 

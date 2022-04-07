@@ -1,6 +1,9 @@
 package de.craftsarmy.client.utils;
 
 import de.craftsarmy.client.Client;
+import de.craftsarmy.craftscore.api.threading.AbstractWorker;
+import de.craftsarmy.craftscore.buildin.threading.Worker;
+import de.craftsarmy.craftscore.utils.Touch;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -20,14 +23,18 @@ public class Animation<E extends AbstractAnimatedTexture> {
     private final Class<? extends E> clazz;
 
     public Animation(Class<? extends E> clazz, String base, String prefix) {
-        touch = new Touch<>();
+        touch = new Touch<>(this.getClass());
         this.base = base;
         this.prefix = prefix;
         this.clazz = clazz;
         Client.worker.submit(StartupTask.class);
     }
 
-    private final class StartupTask implements Worker.Task {
+    private final class StartupTask extends AbstractWorker.Task {
+
+        public StartupTask(Class<?> from) {
+            super(from);
+        }
 
         @Override
         public void run() {

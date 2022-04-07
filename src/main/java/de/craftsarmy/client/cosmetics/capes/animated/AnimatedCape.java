@@ -6,12 +6,15 @@ public class AnimatedCape extends AbstractAnimatedCape {
 
     private ResourceLocation location = new ResourceLocation("ytc/cosmetics/capes/diamond.png");
 
+    public AnimatedCape(Class<?> from) {
+        super(from);
+    }
+
     @Override
     public void update(ResourceLocation location) {
         this.location = location;
     }
 
-    @Override
     public ResourceLocation getCape() {
         return location;
     }

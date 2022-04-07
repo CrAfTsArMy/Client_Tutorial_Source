@@ -15,6 +15,9 @@ public class WelcomeScreen extends Screen {
     }
 
     protected void init() {
+        Client.clientConfig.setBoolean("welcome.screen.shown", true);
+        Client.clientConfig.save(Client.clientConfigFile);
+
         this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 4 + 120 + 12, 150, 20, new TranslatableComponent("gui.toTitle"), (p_96304_) ->
         {
             this.minecraft.setScreen(new TitleScreen());

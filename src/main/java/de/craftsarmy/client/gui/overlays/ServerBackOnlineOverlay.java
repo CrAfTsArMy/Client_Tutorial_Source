@@ -4,9 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.craftsarmy.client.Client;
 import net.minecraft.client.gui.Font;
 
-public class ServerBackOnlineOverlay implements IOverlay {
+public class ServerBackOnlineOverlay extends AbstractOverlay {
 
     private final long autoremove = System.currentTimeMillis() + (1000 * 20);
+
+    public ServerBackOnlineOverlay(Class<?> from) {
+        super(from);
+    }
 
     @Override
     public void render(PoseStack pPostStack, Font font, int pMouseX, int pMouseY, float pPartialTick) {

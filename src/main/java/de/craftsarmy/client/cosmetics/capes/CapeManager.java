@@ -1,9 +1,8 @@
-package de.craftsarmy.client.cosmetics.capes.normal;
+package de.craftsarmy.client.cosmetics.capes;
 
 import de.craftsarmy.client.Client;
-import de.craftsarmy.client.cosmetics.capes.ICape;
-import de.craftsarmy.client.cosmetics.capes.ResetCape;
-import de.craftsarmy.client.utils.Touch;
+import de.craftsarmy.client.cosmetics.capes.normal.DiamondCape;
+import de.craftsarmy.craftscore.utils.Touch;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -11,16 +10,16 @@ import net.optifine.Config;
 
 public class CapeManager {
 
-    private ICape cape;
-    private Touch<ICape> touch;
+    private AbstractCape cape;
+    private Touch<AbstractCape> touch;
 
     public CapeManager init() {
-        touch = new Touch<>();
+        touch = new Touch<>(this.getClass());
         setCape(DiamondCape.class);
         return this;
     }
 
-    public void setCape(Class<? extends ICape> clazz) {
+    public void setCape(Class<? extends AbstractCape> clazz) {
         try {
             cape = touch.touch(clazz);
             /*if (Client.networkManager.isLoggedin())

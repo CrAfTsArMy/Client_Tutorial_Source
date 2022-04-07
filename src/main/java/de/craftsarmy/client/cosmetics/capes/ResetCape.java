@@ -1,9 +1,12 @@
 package de.craftsarmy.client.cosmetics.capes;
 
-import de.craftsarmy.client.cosmetics.capes.ICape;
 import net.minecraft.resources.ResourceLocation;
 
-public class ResetCape implements ICape {
+public class ResetCape extends AbstractCape {
+
+    public ResetCape(Class<?> from) {
+        super(from);
+    }
 
     @Override
     public ResourceLocation getCape() {
