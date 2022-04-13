@@ -3,6 +3,7 @@ package de.craftsarmy.client.cosmetics;
 import de.craftsarmy.client.Client;
 import de.craftsarmy.client.cosmetics.capes.CapeManager;
 import de.craftsarmy.craftscore.api.threading.AbstractWorker;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 
 public class CosmeticsManager {
 
@@ -14,6 +15,9 @@ public class CosmeticsManager {
     public CosmeticsManager init() {
         this.capeManager = new CapeManager().init();
         return this;
+    }
+
+    public void inject(PlayerRenderer renderer) {
     }
 
     public void tick() {

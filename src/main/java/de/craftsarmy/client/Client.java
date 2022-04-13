@@ -1,6 +1,5 @@
 package de.craftsarmy.client;
 
-import com.google.gson.GsonBuilder;
 import com.mojang.realmsclient.RealmsMainScreen;
 import de.craftsarmy.Variables;
 import de.craftsarmy.client.cosmetics.CosmeticsManager;
@@ -8,13 +7,10 @@ import de.craftsarmy.client.gui.overlays.FPSOverlay;
 import de.craftsarmy.client.gui.overlays.OverlayManager;
 import de.craftsarmy.client.gui.overlays.ServerBackOnlineOverlay;
 import de.craftsarmy.client.gui.overlays.ServerOfflineOverlay;
-import de.craftsarmy.client.gui.screens.WelcomeScreen;
 import de.craftsarmy.client.servers.FeaturedServerData;
 import de.craftsarmy.craftscore.Core;
 import de.craftsarmy.craftscore.api.config.AbstractConfig;
 import de.craftsarmy.craftscore.api.threading.AbstractWorker;
-import de.craftsarmy.craftscore.buildin.threading.Worker;
-import de.craftsarmy.discord.RPC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -38,11 +34,15 @@ public class Client {
     public static OverlayManager overlayManager;
     public static CosmeticsManager cosmeticsManager;
 
-    public static String websiteUrl = "https://web1.craftsblock.de";
+    public static String websiteUrl = "https://craftsblock.de";
     public static ServerAddress serverAddress = null;
 
     public static void init(Minecraft minecraft) {
         Client.minecraft = minecraft;
+
+        Core.instance().enableDiscordRPC("948231152076980275", "large", "");
+        Core.instance().getDiscordRPC().update("Idling", "Main Menu", "", "");
+
         worker = Core.instance().getWorker();
         overlayManager = new OverlayManager().init();
         cosmeticsManager = new CosmeticsManager().init();
@@ -82,7 +82,8 @@ public class Client {
     }
 
     public static void resetRpc() {
-        RPC.instance().update("Idling", "Main Menu", "", "");
+        if (Core.instance().getDiscordRPC() != null)
+            Core.instance().getDiscordRPC().update("Idling", "Main Menu", "", "");
         Variables.server = false;
     }
 
