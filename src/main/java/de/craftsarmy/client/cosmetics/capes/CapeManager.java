@@ -1,7 +1,7 @@
 package de.craftsarmy.client.cosmetics.capes;
 
 import de.craftsarmy.client.Client;
-import de.craftsarmy.client.cosmetics.capes.normal.DiamondCape;
+import de.craftsarmy.client.cosmetics.capes.animated.ColorChangingCape;
 import de.craftsarmy.craftscore.utils.Touch;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.SimpleTexture;
@@ -15,7 +15,8 @@ public class CapeManager {
 
     public CapeManager init() {
         touch = new Touch<>(this.getClass());
-        setCape(DiamondCape.class);
+        setCape(ColorChangingCape.class);
+        //setCape(DiamondCape.class);
         return this;
     }
 
@@ -33,7 +34,14 @@ public class CapeManager {
         setCape(ResetCape.class);
     }
 
+    private int i = 0;
+
     public void tick() {
+        if (i < 4) {
+            i++;
+            return;
+        }
+        i = 0;
         assert Client.minecraft.player != null;
         assert cape != null;
         AbstractClientPlayer player = Client.minecraft.player;

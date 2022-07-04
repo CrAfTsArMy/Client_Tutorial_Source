@@ -8,9 +8,9 @@ import de.craftsarmy.client.gui.overlays.OverlayManager;
 import de.craftsarmy.client.gui.overlays.ServerBackOnlineOverlay;
 import de.craftsarmy.client.gui.overlays.ServerOfflineOverlay;
 import de.craftsarmy.client.servers.FeaturedServerData;
-import de.craftsarmy.craftscore.Core;
 import de.craftsarmy.craftscore.api.config.AbstractConfig;
 import de.craftsarmy.craftscore.api.threading.AbstractWorker;
+import de.craftsarmy.craftscore.core.Core;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -34,12 +34,15 @@ public class Client {
     public static OverlayManager overlayManager;
     public static CosmeticsManager cosmeticsManager;
 
-    public static String websiteUrl = "https://craftsblock.de";
+    public static final String clientName = "You Client";
+    public static final String websiteUrl = "https://craftsblock.de";
     public static ServerAddress serverAddress = null;
 
     public static void init(Minecraft minecraft) {
         Client.minecraft = minecraft;
+        Core.instance().init();
 
+        Core.instance().enableWorker();
         Core.instance().enableDiscordRPC("948231152076980275", "large", "");
         Core.instance().getDiscordRPC().update("Idling", "Main Menu", "", "");
 
@@ -50,16 +53,16 @@ public class Client {
         overlayConfigFile = new File("./configs", "overlays.json");
         overlayConfig = Core.instance().getConfigParser().parse(overlayConfigFile);
         if (!overlayConfig.contains("overlay.fps")) {
-            overlayConfig.setBoolean("overlay.fps.enabled", true);
-            overlayConfig.setDouble("overlay.fps.x", 10.5);
-            overlayConfig.setDouble("overlay.fps.y", 2.5);
+            overlayConfig.set("overlay.fps.enabled", true);
+            overlayConfig.set("overlay.fps.x", 10.5);
+            overlayConfig.set("overlay.fps.y", 2.5);
             overlayConfig.save(overlayConfigFile);
         }
 
         clientConfigFile = new File("./configs", "client.json");
         clientConfig = Core.instance().getConfigParser().parse(clientConfigFile);
         if (!clientConfig.contains("welcome.screen.shown")) {
-            clientConfig.setBoolean("welcome.screen.shown", false);
+            clientConfig.set("welcome.screen.shown", false);
             clientConfig.save(clientConfigFile);
         }
 

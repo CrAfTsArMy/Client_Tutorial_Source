@@ -3,7 +3,7 @@ package de.craftsarmy.client.gui.screens;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.craftsarmy.Variables;
 import de.craftsarmy.client.Client;
-import de.craftsarmy.craftscore.Core;
+import de.craftsarmy.craftscore.core.Core;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
@@ -13,11 +13,7 @@ import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import org.apache.logging.log4j.core.config.yaml.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
-
-import java.net.SocketAddress;
-import java.util.Objects;
 
 public class DiscordScreen extends Screen {
 
